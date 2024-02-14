@@ -1,0 +1,9 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: aws-fsx-sc
+provisioner: fsx.csi.aws.com
+parameters:
+  subnetId: subnet-0051feb59c6cfc96f
+  securityGroupIds: sg-0f42026a719e4e266
+  type: fsx-lustre
