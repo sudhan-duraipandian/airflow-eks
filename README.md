@@ -20,13 +20,14 @@ Create IAM roles for the EKS cluster and worker nodes.
 
 a.	EKS_cluster_role with AWS managed policy AmazonEKSClusterPolicy
  
-
+![alt text](<EKS_cluster_role .png>)
 b.	EKSWorkerNode with AWS managed policies AmazonEC2ContainerRegistryReadOnly, AmazonEKS_CNI_Policy, and AmazonEKSWorkerNodePolicy
-
+![alt text](EKS_Worker_Role.png)
 
 ## VPC network setup
 
 Create a VPC in your desired region. Make sure that the public subnets are enabled for auto assigning public IP address.
+![alt text](<Create the VPC and network setup.png>)
  
 ## Create EKS Cluster
 
@@ -38,17 +39,17 @@ An Amazon EKS cluster consists of two primary components:
 ### Cluster configuration
 
 Select the IAM role to allow the Kubernetes control plane to manage AWS resources on your behalf. This property cannot be changed after the cluster is created.
- 
+ ![alt text](<Cluster configuration.png>)
 
 ### Cluster access
 
 By default, Amazon EKS creates an access entry that associates the AmazonEKSClusterAdminPolicy access policy to the IAM principal creating the cluster.
 Any IAM principal assigned the IAM permission to create access entries can create an access entry that provides cluster access to any IAM principal after cluster creation.
 The cluster will source authenticated IAM principals from both EKS access entry APIs and the aws-auth ConﬁgMap.
-
+![alt text](<cluster access.png>)
 ### Networking
 Each Managed Node Group requires you to specify one of more subnets that are defined within the VPC used by the Amazon EKS cluster. Nodes are launched into subnets that you provide. The size of your subnets determines the number of nodes and pods that you can run within them. You can run nodes across multiple AWS availability zones by providing multiple subnets that are each associated different availability zones. Nodes are distributed evenly across all of the designated Availability Zones.
- 
+ ![alt text](Networking.png)
 ### Cluster endpoint access
 You can limit, or completely disable, public access from the internet to your Kubernetes cluster endpoint.
 
@@ -58,7 +59,7 @@ You can, optionally, limit the CIDR blocks that can access the public endpoint. 
 
 You can enable private access to the Kubernetes API server so that all communication between your worker nodes and the API server stays within your VPC. You can limit the IP addresses that can access your API server from the internet, or completely disable internet access to the API server.
 
- 
+ ![alt text](<cluster endpoint access.png>)
 
 ### Controller node setup
 The controller node may be an EC2 machine or a bare metal computer where we install and configure AWS CLI, IAM authenticator, and Kubectl for accessing and making changes to the EKS cluster.
@@ -67,12 +68,12 @@ snap install aws-cli –classic
 
 ``` aws configure ```
 
- 
+ ![alt text](<AWS CLI.png>)
 
 2.	IAM Authenticator
 
 ```curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.15.10/2020-02-22/bin/linux/amd64/aws-iam-authenticator```
-
+![alt text](<IAM Authenticator.png>)
 Apply execute permissions to the binary. 
 
 ```chmod +x ./aws-iam-authenticator```
@@ -84,7 +85,7 @@ Copy the binary to a folder in your PATH.
 Verify the installation
 
 ```aws-iam-authenticator help```
- 
+ ![alt text](<IAM Authenticator 2.png>)
 
 3.	Kubectl
 
@@ -94,7 +95,7 @@ Instance architecture - Linux (amd64)
 
 ```curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.29.0/2024-01-04/bin/linux/amd64/kubectl```
 
- 
+ ![alt text](Kubectl.png)
 
 Apply execute permissions to the binary.
 
@@ -108,74 +109,75 @@ After you install kubectl, you can verify its version.
 
 ```kubectl version –client```
 
- 
+ ![alt text](<kubectl version –client.png>)
 
 To configure the kubectl to communicate with the EKS cluster run the following command. Replace region-code with the AWS Region that your cluster is in. Replace my-cluster with the name of your cluster.
 
 ```aws eks update-kubeconfig --region region-code --name my-cluster```
 
- 
+ ![alt text](kubeconfig.png)
 
 Check the complete configuration of the kubectl by running the following command
 
 ```more /root/.kube/config```
 
- 
+ ![alt text](<more root.kubeconfig.png>)
 
 Now upon running the following command, we should be able to see the services on our cluster.
 
 ```kubectl get svc```
- 
+ ![alt text](<kubectl get svc.png>)
 
 ### Create Worker Nodes
 
 Create a node group on the EKS cluster’s compute tab.
 A node group is a group of EC2 instances that supply compute capacity to your Amazon EKS cluster. You can add multiple node groups to your cluster.
 
- 
+ ![alt text](<Create Worker Nodes.png>)
 
 1.	Node group configuration
 
 Amazon EKS managed node groups make it easy to provision compute capacity for your cluster. Node groups consist of one or more EC2 instances running the latest EKS-optimized AMIs. All nodes are provisioned as part of an EC2 autoscaling group that is managed for you by Amazon EKS and all resources including EC2 instances and autoscaling groups run within your AWS account.
 •	You can apply Kubernetes labels during node group creation and update them at any time.
 •	Nodes are automatically tagged for auto-discovery by the Kubernetes cluster autoscaler.
- 
+ ![alt text](<Node group configuration.png>)
 
 2.	Node group compute configuration
 
 Provision nodes for your cluster with the latest EKS-optimized AMIs. Easily update nodes to the latest AMI or Kubernetes versions when they are available.
 Use launch templates to customize the configuration of the EC2 instances created as part of your node group.
- 
+ ![alt text](<Node group compute configuration.png>)
 
 3.	Node group scaling configuration
 
 You can change the size of your node group at any time.
- 
+ ![alt text](<Node group scaling configuration.png>)
 
 4.	Node group update configuration
 
 Amazon EKS managed node groups supports updating nodes to newer AMI versions in parallel. By default, nodes are updated one at a time. However, if your applications can tolerate a higher level of disruption, you can decrease the overall time to complete a node group version update by increasing the parallelization level. You can increase this parallelization level by setting the node group maximum number of unavailable nodes, either as an absolute number, or as a percentage of the node group size. 
+![alt text](<Node group update configuration.png>)
 
 5.	Node group network configuration
 
 Select multiple subnets for a node group to provision nodes across multiple AWS availability zones.
- 
+ ![alt text](<Node group network configuration.png>)
 
 Now we can see the list of nodes created under this node group by running the following command.
 
 ```kubectl get nodes```
 
- 
+ ![alt text](<kubectl get nodes.png>)
 
 Also, we can see the node in the EC2 console with the same private IP address as found in the above screenshot.
 
- 
+ ![alt text](<EC2 console.png>)
 
 
 ## Create FSx
 The type of file system we choose is Amazon FSx for Lustre as it is cost-effective, scalable and high-performing file storage for compute workloads like airflow.
 
- 
+ ![alt text](<Create FSx.png>)
 
 ### File system details
 Persistent file systems are ideal for longer-term storage and workloads. Data is replicated and file servers are replaced if they fail.
@@ -187,16 +189,16 @@ Choose SSD storage for latency-sensitive workloads or workloads requiring the hi
 Choose HDD storage for throughput-focused workloads that aren’t latency-sensitive. For HDD-based file systems, the optional SSD cache improves performance by automatically placing your most frequently read data on SSD (the cache size is 20% of your file system size).
 
 Throughput per unit of storage represents the throughput that will be available per TiB of provisioned storage. Total throughput for your file system is this value multiplied by storage capacity.
- 
+ ![alt text](<File system details.png>)
 
 ### Network & security
 The VPC Security Groups associated with your file system’s network interfaces determine which compute instances can access your file system. If you don’t select a VPC Security Group, Amazon FSx will automatically associate your VPC’s default Security Group with your file system’s network interfaces.
 
- 
+ ![alt text](<Network & security.png>)
 
 The provided security groups do not permit Lustre LNET network traffic on port 988 for the file system to be created.
 
- 
+ ![alt text](<Network & security 2.png>)
 
 # Deploying Apache Airflow on a Kubernetes Cluster
 ## Install the FSx CSI Driver
@@ -228,7 +230,7 @@ Once you have the policy added your instance IAM role, you can start to deploy t
 
 ```$kubectl create -k "github.com/kubernetes-sigs/aws-fsx-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"```
 
- 
+ ![alt text](<Install the FSx CSI Driver.png>)
 
 ## Namespace for airflow deployment
 
@@ -236,7 +238,7 @@ There will be few namespaces created by default in the EKS cluster. Those can be
 
 ```kubectl get ns```
 
- 
+ ![alt text](<kubectl get ns.png>)
 
 We can create a custom namespace for the Airflow.
 
@@ -244,7 +246,7 @@ We can create a custom namespace for the Airflow.
 
 ```kubectl get ns```
 
- 
+ ![alt text](<kubectl get ns 2.png>)
 
 Going further we are going to use this namespace for installing the airflow. Hence, we can set this namespace as default by using the following command.
 
@@ -260,7 +262,7 @@ Create a path for managing the airflow resources.
 mkdir ~/.kube/airflow-resources
 cd ~/.kube/airflow-resources
 ```
- 
+ ![alt text](kube-airflow-resources.png)
 
 ### Storageclass
 
@@ -274,6 +276,8 @@ Check the storage class using the following command.
 
 ```kubectl describe sc aws-fsx-sc```
 
+![alt text](<storage calss.png>)
+
 ### Persistent Volume Claim
 Create the persistent volume claim configuration file for the FSX in the name persistent-volume-claim.yaml.
 
@@ -284,7 +288,8 @@ Apply the volume claim using the following command.
 Check the volume claim configuration using the following command.
 
 ```kubectl describe pvc aws-fsx-pvc```
- 
+ ![alt text](<persistent volume claim.png>)
+
 ### Config Map
 Create config map configuration file in the name airflow-configmap.yaml.
 
@@ -295,6 +300,8 @@ Apply the config map using the following command.
 Check the config using the following command.
 
 ```kubectl describe configmap airflow-config ```
+
+![alt text](<config map.png>)
 
 ### Scheduler
 
@@ -308,6 +315,8 @@ Apply the scheduler configurationusing the following command
 Check the scheduler configuration using the following command.
 
 ```kubectl describe sa airflow-scheduler ```
+
+![alt text](scheduler.png)
 
 ### Pod Launcher Role and Role Binding
 Create the Pod launcher role in the name pod-launcher-role.yaml as shown below.
@@ -326,6 +335,8 @@ kubectl describe role pod-launcher-role
 kubectl describe role pod-launcher-role-binding
 ```
 
+![alt text](<role and role binding.png>)
+
 ### Deployment
 Now that all our prerequisites and the cluster resources are ready, we are going to create our deployment file for the airflow in the name airflow-deployment.yaml.
 
@@ -336,6 +347,8 @@ Deploy the airflow webserver by applying the deployment configuration using the 
 The entire configuration of the airflow deployment including all that we applied earlier can be checked now using the following command.
 
 ```kubectl describe deployment airflow ``
+
+![alt text](deployment.png)
 
 To check the status of the pods running in the deployment, use the following command.
 
@@ -353,4 +366,8 @@ And check the details of the webserver using the following command.
 
 ```kubectl describe service webserver-svc```
 
+![alt text](service.png)
+
 Airflow is finally deployed on the Kubernetes cluster and is running successfully, we can open the Airflow webserver UI using the cluster endpoint.
+
+![alt text](<Airflow running.png>)
