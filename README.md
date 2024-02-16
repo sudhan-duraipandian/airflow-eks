@@ -266,7 +266,7 @@ cd ~/.kube/airflow-resources
 
 ### Storageclass
 
-Create the Storage class configuration file in the name airflow-storageclass.yaml. Where the subnet and the security group used to create the FSx must be mentioned
+Create the Storage class configuration file in the name [airflow-storageclass.yaml](airflow-storageclass.yaml). Where the subnet and the security group used to create the FSx must be mentioned
 
 Apply the storage class using the following command.
 
@@ -279,7 +279,7 @@ Check the storage class using the following command.
 ![alt text](<storage calss.png>)
 
 ### Persistent Volume Claim
-Create the persistent volume claim configuration file for the FSX in the name persistent-volume-claim.yaml.
+Create the persistent volume claim configuration file for the FSX in the name [persistent-volume-claim.yaml](persistent-volume-claim.yaml).
 
 Apply the volume claim using the following command.
 
@@ -291,7 +291,7 @@ Check the volume claim configuration using the following command.
  ![alt text](<persistent volume claim.png>)
 
 ### Config Map
-Create config map configuration file in the name airflow-configmap.yaml.
+Create config map configuration file in the name [airflow-configmap.yaml](airflow-configmap.yaml).
 
 Apply the config map using the following command.
 
@@ -305,7 +305,7 @@ Check the config using the following command.
 
 ### Scheduler
 
-Create the scheduler configuration for Airflow in the name scheduler-serviceaccount.yaml.
+Create the scheduler configuration for Airflow in the name [scheduler-serviceaccount.yaml](scheduler-serviceaccount.yaml).
 
 Apply the scheduler configurationusing the following command
 
@@ -319,9 +319,9 @@ Check the scheduler configuration using the following command.
 ![alt text](scheduler.png)
 
 ### Pod Launcher Role and Role Binding
-Create the Pod launcher role in the name pod-launcher-role.yaml as shown below.
+Create the Pod launcher role in the name [pod-launcher-role.yaml](pod-launcher-role.yaml) as shown below.
 
-Create the pod launcher role binding in the name pod-launcher-role-binding.yaml.
+Create the pod launcher role binding in the name [pod-launcher-role-binding.yaml](pod-launcher-role-binding.yaml).
 
 Apply the role and role binding configurations using the following commands.
 
@@ -338,7 +338,7 @@ kubectl describe role pod-launcher-role-binding
 ![alt text](<role and role binding.png>)
 
 ### Deployment
-Now that all our prerequisites and the cluster resources are ready, we are going to create our deployment file for the airflow in the name airflow-deployment.yaml.
+Now that all our prerequisites and the cluster resources are ready, we are going to create our deployment file for the airflow in the name [airflow-deployment.yaml](airflow-deployment.yaml).
 
 Deploy the airflow webserver by applying the deployment configuration using the following command.
 
@@ -356,7 +356,7 @@ To check the status of the pods running in the deployment, use the following com
 
 ### Service
 
-We need to create a Kubernetes service for the airflow webserver. The YAML file to create the webserver service with the defined network port is called airflow-service.yaml
+We need to create a Kubernetes service for the airflow webserver. The YAML file to create the webserver service with the defined network port is called [airflow-service.yaml](airflow-service.yaml)
 
 Now we can create the webserver service using the following command.
 
